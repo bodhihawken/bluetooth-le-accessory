@@ -33,6 +33,8 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
     
     private var session = ASAccessorySession()
     private var networkSession = NEHotspotConfigurationManager()
+    private var hasReceivedFirstPing = false
+    private var tcpConnection: NWConnection?
 
 
     init(_ viewController: UIViewController?, _ displayStrings: [String: String], _ callback: @escaping Callback) {
@@ -151,85 +153,49 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
                 }
             } else if let ssid = accessory.ssid {
                 print("attempting to join accessory hotspot")
-                // Create a `NEHotspotConfiguration` with this SSID to configure.
-                //let configuration = NEHotspotConfiguration(ssid: sside)
-                //print ("configuration: \(configuration)")
-                //self.hotspotConfigManager.apply(configuration)
-
-                //configuration.apply()
-
-                let restul = self.networkSession.joinAccessoryHotspotWithoutSecurity(accessory) { error in
-                print ("completed i guess  \(error)")
+                self.networkSession.joinAccessoryHotspotWithoutSecurity(accessory) { error in
+                    print ("completed i guess  \(error)")
                     if let error = error {
                         print("Failed to join accessory hotspot: \(error)")
                     } else { 
                         print("Successfully joined accessory hotspot")
                         print("joined accessory hotspot")
-                // Register to receive UDP broadcast on port 15000
-                let udpListener: NWListener
-                do {
-                    let parameters = NWParameters.udp
-                    parameters.allowLocalEndpointReuse = true
-                    parameters.requiredInterfaceType = .wifi
-                    udpListener = try NWListener(using: parameters, on: 15000)
-                } catch {
-                    print("Failed to create UDP listener: \(error)")
-                    return
-                }
-                
-                udpListener.stateUpdateHandler = { newState in
-                    switch newState {
-                    case .ready:
-                        print("UDP listener is ready on port 15000")
-                    case .failed(let error):
-                        print("UDP listener failed with error: \(error)")
-                        // Attempt to restart the listener
-                  
-                    case .cancelled:
-                        print("UDP listener cancelled")
-                    default:
-                        break
-                    }
-                }
-                
-                udpListener.newConnectionHandler = { newConnection in
-                    newConnection.start(queue: .global())
-                    self.receivePackets(on: newConnection)
-                }
-                
-                udpListener.start(queue: .global())
-                
-                // Set up TCP connection
-                let tcpConnection = NWConnection(host: "192.168.1.1", port: 15001, using: .tcp)
-                tcpConnection.stateUpdateHandler = { state in
-                    switch state {
-                    case .ready:
-                        print("TCP connection is ready")
-                        // Send "!" to enable data output mode
-                        if let data = "!".data(using: .utf8) {
-                            tcpConnection.send(content: data, completion: .contentProcessed { error in
-                                if let error = error {
-                                    print("Failed to send data output mode command: \(error)")
-                                } else {
-                                    print("Data output mode enabled")
-                                }
-                            })
+                        
+                        // Set up UDP listener
+                        let udpListener: NWListener
+                        do {
+                            let parameters = NWParameters.udp
+                            parameters.allowLocalEndpointReuse = true
+                            parameters.requiredInterfaceType = .wifi
+                            udpListener = try NWListener(using: parameters, on: 15000)
+                        } catch {
+                            print("Failed to create UDP listener: \(error)")
+                            return
                         }
-                    case .failed(let error):
-                        print("TCP connection failed: \(error)")
-                        // Attempt to reconnect
-                        tcpConnection.restart()
-                    case .cancelled:
-                        print("TCP connection cancelled")
-                    default:
-                        break
+                        
+                        udpListener.stateUpdateHandler = { newState in
+                            switch newState {
+                            case .ready:
+                                print("UDP listener is ready on port 15000")
+                            case .failed(let error):
+                                print("UDP listener failed with error: \(error)")
+                            case .cancelled:
+                                print("UDP listener cancelled")
+                            default:
+                                break
+                            }
+                        }
+                        
+                        udpListener.newConnectionHandler = { newConnection in
+                            newConnection.start(queue: .global())
+                            self.receivePackets(on: newConnection)
+                        }
+                        
+                        udpListener.start(queue: .global())
+                        
+                        // Set up TCP connection
                     }
                 }
-                
-                tcpConnection.start(queue: .global())
-                    }
-                }
-                print("joined accessory with result: \(restul)" )
                 
 
             }
@@ -302,25 +268,123 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
                 if message == "P" {
                     print("Received ping, sending pong")
                     let response = "p"
+
+                   
                     if let responseData = response.data(using: .utf8) {
                         connection.send(content: responseData, completion: .contentProcessed { error in
                             if let error = error {
                                 print("Error sending pong: \(error)")
                             } else {
                                 print("Pong sent successfully")
+                                 // After receiving first ping, send "!" to enable data output mode
+                    if !self.hasReceivedFirstPing {
+                        
+                        // Send "!" command over TCP connection to enable data output mode
+                        if let tcpConnection = self.tcpConnection, 
+                           tcpConnection.state == .ready,
+                           let enableData = "!".data(using: .utf8) {
+                            
+                            print("Sending '!' command to enable data output mode")
+                            tcpConnection.send(content: enableData, completion: .contentProcessed { error in
+                                if let error = error {
+                                    print("Error sending '!' command: \(error)")
+                                } else {
+                                    print("Data output mode command sent successfully")
+
+                                }
+                            })
+                        } else {
+                            print("TCP connection not ready to send '!' command")
+                        }
+                    }
+
+                                
+    
                             }
                         })
                     }
                 } else if message == "!" {
                     print("Data output mode enabled")
-                } else {
+                } else if message.contains("HR") && message.contains("-") {
                     // This is likely an EID
+                    print("HRx has identified itself, make a TCP connection request")
+                    self.setupTCPConnection()
+
+                    print("Received a request to setup the data connection.")
+                } else {
                     print("Received EID: \(message)")
                 }
             }
             
             // Continue receiving packets
             self.receivePackets(on: connection)
+        }
+    }
+
+    // Set up TCP connection
+    private func setupTCPConnection() {
+        let tcpConnection = NWConnection(host: "192.168.1.1", port: 15001, using: .tcp)
+        self.tcpConnection = tcpConnection
+        
+        tcpConnection.stateUpdateHandler = { [weak self] state in
+            guard let self = self else { return }
+            
+            switch state {
+            case .ready:
+                print("TCP connection is ready")
+                // Send data output mode command
+                
+                // Start receiving packets
+                self.receiveTCPPackets(on: tcpConnection)
+            case .failed(let error):
+                print("TCP connection failed: \(error)")
+                // Reset first ping flag on failure
+                self.hasReceivedFirstPing = false
+                // Attempt to reconnect after a delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.setupTCPConnection()
+                }
+            case .cancelled:
+                print("TCP connection cancelled")
+                self.hasReceivedFirstPing = false
+            default:
+                break
+            }
+        }
+        
+        tcpConnection.start(queue: .global())
+    }
+
+    private func receiveTCPPackets(on connection: NWConnection) {
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self] (data, context, isComplete, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error receiving TCP packet: \(error)")
+                return
+            }
+            
+            guard let data = data, !data.isEmpty else {
+                print("Received empty TCP packet")
+                return
+            }
+            
+            print("Received TCP packet of size: \(data.count) bytes")
+            
+            // Process the received data
+            if let message = String(data: data, encoding: .utf8) {
+                print("Received TCP message: \(message)")
+                
+                // Handle ping/pong mechanism
+               
+                    // This is an EID message
+                    print("Received EID: \(message)")
+                    // TODO: Handle EID data - emit event or callback
+                
+            }
+            
+            // Continue receiving packets
+            self.receiveTCPPackets(on: connection)
         }
     }
 

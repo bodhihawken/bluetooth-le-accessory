@@ -43,3 +43,15 @@ responding to the Ping requests correctly.
 HRx will disconnect from the device once TCP connection is terminated.
 4
 5
+
+
+Process of connection
+
+- Device: Connects
+- Device: UDP broadcasts on 15000 HRx-Sno
+- Client Should: connect a TCP client on 15001 to device
+At all times. 
+- Device: will send ping message "P" every 2 seconds on UDP 15000
+- Client MUST reply "p" udp 15000 to ensure connection stays active
+- After recieving first ping, client must Unicast TCP message "!" on port 15001 
+- When EIDs are scanned it will be broadcasted with unicast using TCP on port 15001
