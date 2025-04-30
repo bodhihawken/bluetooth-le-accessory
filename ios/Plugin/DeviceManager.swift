@@ -111,6 +111,15 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
         }
     }
 
+    let availableAccessories: [ASAccessory] = []
+
+    @available(iOS 18.0, *)
+    func getAvailableAccessories( _ AccResultCallback: @escaping AccResultCallback) {
+        print("Finding available accessories")
+        let accessories = session.accessories
+        print(accessories)
+        print(AccResultCallback)
+    }
 
     @available(iOS 18.0, *)
     private func handleSessionEvent(event: ASAccessoryEvent) {
@@ -118,8 +127,8 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
         case .activated:
             // Use previously-discovered accessories in session.accessories, if necessary.
             print("Activated event")
-            let accessories = session.accessories
-            print(accessories)
+            availableAccessories = session.accessories
+            print(availableAccessories)
         case .accessoryAdded:
             // Handle addition of an accessory by person using the app.
             print("Accessory added: \(event.eventType)")
@@ -199,15 +208,20 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
                 
 
             }
+
+            availableAccessories = session.accessories
         case .accessoryRemoved, .accessoryChanged:
             // Handle removal or change of previously-added accessory, if necessary.
             print("Accessory removed or changed: \(event.eventType)")
             guard let accessory = event.accessory else { return }
             print(accessory)
-            
+            availableAccessories = session.accessories
+
         case .invalidated:
             // The session is now invalid and you can't use it further.
             print("Session invalidated: \(event.eventType)")
+
+            
         case .migrationComplete:
             // Handle migration. TEST
             print("Migration complete: \(event.eventType)")
