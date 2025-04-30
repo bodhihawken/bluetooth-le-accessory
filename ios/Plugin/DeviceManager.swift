@@ -5,6 +5,8 @@ import SwiftUI
 import NetworkExtension
 import Capacitor
 
+//Manages Bluetooth based accessory connections
+
 
 @available(iOS 18.0, *)
 class DeviceManager: NSObject, CBCentralManagerDelegate {
@@ -32,9 +34,8 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
     
     
     private var session = ASAccessorySession()
-    private var networkSession = NEHotspotConfigurationManager()
+    private var networkDeviceManager: NetworkDeviceManager?
     private var hasReceivedFirstPing = false
-    private var tcpConnection: NWConnection?
 
 
     init(_ viewController: UIViewController?, _ displayStrings: [String: String], _ callback: @escaping Callback) {
@@ -44,8 +45,7 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
         self.callbackMap["initialize"] = callback
         self.session.activate(on: DispatchQueue.main, eventHandler: handleSessionEvent(event:))
         self.centralManager = CBCentralManager(delegate: self, queue: DispatchQueue.main)
-        
-        
+        self.networkDeviceManager = NetworkDeviceManager()
     }
 
     func setDisplayStrings(_ displayStrings: [String: String]) {
@@ -113,294 +113,7 @@ class DeviceManager: NSObject, CBCentralManagerDelegate {
 
     let availableAccessories: [ASAccessory] = []
 
-    @available(iOS 18.0, *)
-    func getAvailableAccessories( _ AccResultCallback: @escaping AccResultCallback) {
-        print("Finding available accessories")
-        let accessories = session.accessories
-        print(accessories)
-        print(AccResultCallback)
-    }
 
-    @available(iOS 18.0, *)
-    private func handleSessionEvent(event: ASAccessoryEvent) {
-        switch event.eventType {
-        case .activated:
-            // Use previously-discovered accessories in session.accessories, if necessary.
-            print("Activated event")
-            availableAccessories = session.accessories
-            print(availableAccessories)
-        case .accessoryAdded:
-            // Handle addition of an accessory by person using the app.
-            print("Accessory added: \(event.eventType)")
-            guard let accessory = event.accessory else { return }
-            print(accessory)
-            print (accessory.bluetoothIdentifier)
-            print (accessory.bluetoothTransportBridgingIdentifier)
-            print (accessory.state)
-            
-            if let peripheralUUID = accessory.bluetoothIdentifier {
-                print("getting peripheral version")
-                print (peripheralUUID)
-                           let peripheral = self.centralManager.retrievePeripherals(withIdentifiers: [peripheralUUID]).first
-                print (peripheral)
-                if (peripheral == nil) {return}
-                
-                let device: Device = Device(peripheral!)
-                print (device)
-                let RSSI = peripheral?.readRSSI()
-                print(RSSI)
-                if DeviceManager.AccResultCallback.self != nil {
-                    self.accResultCallback!(device,      accessory.descriptor.bluetoothServiceUUID!,
-                                            accessory.descriptor.bluetoothCompanyIdentifier, 12313)
-                } else {
-                    print("no callback for accessory added")
-                    //In this context, "NetworkExtension" really means "NEHotspotConfigurationManager". Also, just so this is the clear, the big benefit of this flow for a WiFi accessory is that it means your app will be able to automatically reconnect to it's paired accessory without any additional user interaction. That's a huge improvement to NEHotspotConfigurationManager.
-                    
-                    ///joinAccessoryHotspotWithoutSecurity
-                    ///joinAccessoryHotspot
-                    
-                }
-            } else if let ssid = accessory.ssid {
-                print("attempting to join accessory hotspot")
-                self.networkSession.joinAccessoryHotspotWithoutSecurity(accessory) { error in
-                    print ("completed i guess  \(error)")
-                    if let error = error {
-                        print("Failed to join accessory hotspot: \(error)")
-                    } else { 
-                        print("Successfully joined accessory hotspot")
-                        print("joined accessory hotspot")
-                        
-                        // Set up UDP listener
-                        let udpListener: NWListener
-                        do {
-                            let parameters = NWParameters.udp
-                            parameters.allowLocalEndpointReuse = true
-                            parameters.requiredInterfaceType = .wifi
-                            udpListener = try NWListener(using: parameters, on: 15000)
-                        } catch {
-                            print("Failed to create UDP listener: \(error)")
-                            return
-                        }
-                        
-                        udpListener.stateUpdateHandler = { newState in
-                            switch newState {
-                            case .ready:
-                                print("UDP listener is ready on port 15000")
-                            case .failed(let error):
-                                print("UDP listener failed with error: \(error)")
-                            case .cancelled:
-                                print("UDP listener cancelled")
-                            default:
-                                break
-                            }
-                        }
-                        
-                        udpListener.newConnectionHandler = { newConnection in
-                            newConnection.start(queue: .global())
-                            self.receivePackets(on: newConnection)
-                        }
-                        
-                        udpListener.start(queue: .global())
-                        
-                        // Set up TCP connection
-                    }
-                }
-                
-
-            }
-
-            availableAccessories = session.accessories
-        case .accessoryRemoved, .accessoryChanged:
-            // Handle removal or change of previously-added accessory, if necessary.
-            print("Accessory removed or changed: \(event.eventType)")
-            guard let accessory = event.accessory else { return }
-            print(accessory)
-            availableAccessories = session.accessories
-
-        case .invalidated:
-            // The session is now invalid and you can't use it further.
-            print("Session invalidated: \(event.eventType)")
-
-            
-        case .migrationComplete:
-            // Handle migration. TEST
-            print("Migration complete: \(event.eventType)")
-        case .pickerDidPresent:
-            // Update state for picker appearing, if necessary.
-            print ("picker did present")
-        case .pickerDidDismiss:
-            // Update state for picker disappearing, if necessary.
-            print ("picker did dismiss")
-        case .unknown:
-            // Handle unknown event type, if appropriate.
-            print("Received unknown event type: \(event.eventType)")
-        @unknown default:
-            // Reserve this space for yet-to-be-defined event types.
-            print("Received unhandled event type: \(event.eventType)")
-        }
-    }
-    
-    
-    func stateDidChange(to state: NWConnection.State) {
-        switch state {
-        case .ready:
-            print("Connection is ready")
-        case .waiting(let error):
-            print("Connection is waiting with error: \(error)")
-        case .failed(let error):
-            print("Connection failed with error: \(error)")
-        case .setup:
-            print("Connection is being set up")
-        case .preparing:
-            print("Connection is preparing")
-        case .cancelled:
-            print("Connection was cancelled")
-        @unknown default:
-            print("Unknown connection state")
-        }
-    }
-
-    func receivePackets(on connection: NWConnection) {
-        connection.receiveMessage { (data, context, isComplete, error) in
-            if let error = error {
-                print("Error receiving packet: \(error)")
-                return
-            }
-            
-            guard let data = data, !data.isEmpty else {
-                print("Received empty packet")
-                return
-            }
-            
-            print("Received packet of size: \(data.count) bytes")
-            
-            // Process the received data
-            if let message = String(data: data, encoding: .utf8) {
-                print("Received message: \(message)")
-                
-                // Handle ping/pong mechanism
-                if message == "P" {
-                    print("Received ping, sending pong")
-                    let response = "p"
-
-                   
-                    if let responseData = response.data(using: .utf8) {
-                        connection.send(content: responseData, completion: .contentProcessed { error in
-                            if let error = error {
-                                print("Error sending pong: \(error)")
-                            } else {
-                                print("Pong sent successfully")
-                                 // After receiving first ping, send "!" to enable data output mode
-                    if !self.hasReceivedFirstPing {
-                        
-                        // Send "!" command over TCP connection to enable data output mode
-                        if let tcpConnection = self.tcpConnection, 
-                           tcpConnection.state == .ready,
-                           let enableData = "!".data(using: .utf8) {
-                            
-                            print("Sending '!' command to enable data output mode")
-                            tcpConnection.send(content: enableData, completion: .contentProcessed { error in
-                                if let error = error {
-                                    print("Error sending '!' command: \(error)")
-                                } else {
-                                    print("Data output mode command sent successfully")
-
-                                }
-                            })
-                        } else {
-                            print("TCP connection not ready to send '!' command")
-                        }
-                    }
-
-                                
-    
-                            }
-                        })
-                    }
-                } else if message == "!" {
-                    print("Data output mode enabled")
-                } else if message.contains("HR") && message.contains("-") {
-                    // This is likely an EID
-                    print("HRx has identified itself, make a TCP connection request")
-                    self.setupTCPConnection()
-
-                    print("Received a request to setup the data connection.")
-                } else {
-                    print("Received EID: \(message)")
-                }
-            }
-            
-            // Continue receiving packets
-            self.receivePackets(on: connection)
-        }
-    }
-
-    // Set up TCP connection
-    private func setupTCPConnection() {
-        let tcpConnection = NWConnection(host: "192.168.1.1", port: 15001, using: .tcp)
-        self.tcpConnection = tcpConnection
-        
-        tcpConnection.stateUpdateHandler = { [weak self] state in
-            guard let self = self else { return }
-            
-            switch state {
-            case .ready:
-                print("TCP connection is ready")
-                // Send data output mode command
-                
-                // Start receiving packets
-                self.receiveTCPPackets(on: tcpConnection)
-            case .failed(let error):
-                print("TCP connection failed: \(error)")
-                // Reset first ping flag on failure
-                self.hasReceivedFirstPing = false
-                // Attempt to reconnect after a delay
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    self.setupTCPConnection()
-                }
-            case .cancelled:
-                print("TCP connection cancelled")
-                self.hasReceivedFirstPing = false
-            default:
-                break
-            }
-        }
-        
-        tcpConnection.start(queue: .global())
-    }
-
-    private func receiveTCPPackets(on connection: NWConnection) {
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self] (data, context, isComplete, error) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("Error receiving TCP packet: \(error)")
-                return
-            }
-            
-            guard let data = data, !data.isEmpty else {
-                print("Received empty TCP packet")
-                return
-            }
-            
-            print("Received TCP packet of size: \(data.count) bytes")
-            
-            // Process the received data
-            if let message = String(data: data, encoding: .utf8) {
-                print("Received TCP message: \(message)")
-                
-                // Handle ping/pong mechanism
-               
-                    // This is an EID message
-                    print("Received EID: \(message)")
-                    // TODO: Handle EID data - emit event or callback
-                
-            }
-            
-            // Continue receiving packets
-            self.receiveTCPPackets(on: connection)
-        }
-    }
 
     func startScanning(
         _ serviceUUIDs: [CBUUID],

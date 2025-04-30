@@ -17,6 +17,17 @@ struct AccessorySearchItem {
     let ssidPrefix: String
 }
 
+
+//manages accessory discovery before palming off to the 
+//network and bluetooth device managers after finding 
+//available accessories or connecting them
+
+//things are called devices once reffered to the indivudal mangers
+//they are called accessories before that
+
+//this class also passes on all the calls to the 2 managers
+//(for permance of the objects iOS requires like accessorys, and devices)
+
 @available(iOS 18.0, *)
 @objc(BluetoothLe)
 public class BluetoothLe: CAPPlugin {
@@ -26,6 +37,7 @@ public class BluetoothLe: CAPPlugin {
     typealias BleDescriptor = [String: Any]
     private var deviceManager: DeviceManager?
     private var deviceMap = [String: Device]()
+    private var networkDeviceManager: = [String: ASAccessory]
     private var displayStrings = [String: String]()
 
     override public func load() {
@@ -148,6 +160,20 @@ public class BluetoothLe: CAPPlugin {
     }
 
 
+    private func updateAccessoryList() {
+        let accessorys = self.deviceManager?.accessorys
+        self.notifyListeners("accessorysUpdated", data: accessorys)
+        // Update the accessory map with the latest accessory information
+        if let accessorys = self.deviceManager?.accessorys {
+            for accessory in accessorys {
+                let accessoryId = accessory.identifier.uuidString
+                self.deviceMap[accessoryId] = accessory
+            }
+        }
+
+    }
+
+
     //example input from js land is (options: {items: []})
     @objc func startAccessorySearch(_ call: CAPPluginCall) {
         guard let deviceManager = self.getDeviceManager(call) else { return }
@@ -217,6 +243,63 @@ public class BluetoothLe: CAPPlugin {
         })
          
         call.resolve()
+    
+
+        switch event.eventType {
+        case .activated:
+            
+            self.updateAccessoryList()
+        case .accessoryAdded:
+            print("Accessory added: \(event.eventType)")
+            guard let accessory = event.accessory else { return }
+            print(accessory)
+            print(accessory.bluetoothIdentifier)
+            print(accessory.bluetoothTransportBridgingIdentifier)
+            print(accessory.state)
+            
+            self.notifyListeners("newAccessory", data: accessory)
+            self.updateAccessoryList()
+
+
+
+        case .accessoryRemoved, .accessoryChanged:
+            print("Accessory removed or changed: \(event.eventType)")
+            guard let accessory = event.accessory else { return }
+            print(accessory)
+            self.updateAccessoryList()
+        case .invalidated:
+            print("Session invalidated: \(event.eventType)")
+        case .migrationComplete:
+            print("Migration complete: \(event.eventType)")
+        case .pickerDidPresent:
+            print("picker did present")
+        case .pickerDidDismiss:
+            print("picker did dismiss")
+        case .unknown:
+            print("Received unknown event type: \(event.eventType)")
+        @unknown default:
+            print("Received unhandled event type: \(event.eventType)")
+        }
+    }
+    
+
+
+    @objc func joinAccessorySR5(_ call: CAPPluginCall) {
+
+        guard let accessory_id = call.getString("accessory_id") else {
+            call.reject("accessory_id must be provided")
+            return
+        }
+
+        let accessory = self.deviceMap[accessory_id]
+        
+        networkDeviceManager?.joinAccessorySR5(accessory: accessory) { error in
+            if let error = error {
+                call.reject("Failed to join accessory: \(error)")
+            } else {
+                call.resolve()
+            }
+        }
     }
 
     @objc func requestLEScan(_ call: CAPPluginCall) {
