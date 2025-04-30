@@ -66,6 +66,7 @@ Below is an index of all the methods available.
 - [`openAppSettings()`](#openappsettings)
 - [`setDisplayStrings(...)`](#setdisplaystrings)
 - [`requestDevice(...)`](#requestdevice)
+- [`startAccessorySearch(...)`](#startaccessorysearch)
 - [`requestLEScan(...)`](#requestlescan)
 - [`stopLEScan()`](#stoplescan)
 - [`getDevices(...)`](#getdevices)
@@ -542,6 +543,22 @@ For an example, see [usage](#usage).
 
 ---
 
+### startAccessorySearch(...)
+
+```typescript
+startAccessorySearch(items: AccessoryDefinition[], callback: (result: any) => void) => Promise<void>
+```
+
+Start searching for accessories based on provided items.
+Only available on **iOS**.
+
+| Param          | Type                                  | Description                                                                               |
+| -------------- | ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **`items`**    | <code>AccessoryDefinition[]</code>    | An array of objects containing displayName, uuidString, and imageName for each accessory. |
+| **`callback`** | <code>(result: any) =&gt; void</code> |                                                                                           |
+
+---
+
 ### requestLEScan(...)
 
 ```typescript
@@ -918,6 +935,16 @@ Stop listening to the changes of the value of a characteristic. For an example, 
 | **`optionalServices`** | <code>string[]</code>                         | For **web**, all services that will be used have to be listed under services or optionalServices, e.g. [numberToUUID(0x180f)] (see [UUID format](#uuid-format))                                                                                           |
 | **`allowDuplicates`**  | <code>boolean</code>                          | Normally scans will discard the second and subsequent advertisements from a single device. If you need to receive them, set allowDuplicates to true (only applicable in `requestLEScan`). (default: false)                                                |
 | **`scanMode`**         | <code><a href="#scanmode">ScanMode</a></code> | Android scan mode (default: <a href="#scanmode">ScanMode.SCAN_MODE_BALANCED</a>)                                                                                                                                                                          |
+
+#### AccessoryDefinition
+
+| Prop                         | Type                |
+| ---------------------------- | ------------------- |
+| **`displayName`**            | <code>string</code> |
+| **`uuidString`**             | <code>string</code> |
+| **`imageName`**              | <code>string</code> |
+| **`companyIdentifier`**      | <code>number</code> |
+| **`bluetoothNameSubstring`** | <code>string</code> |
 
 #### ScanResult
 

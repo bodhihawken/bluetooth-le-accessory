@@ -1,0 +1,131 @@
+  [log] - Accessory Display Objects [{"displayName":"SDL400S Shearwell","imageName":"shearwell-reader","uuidString":"2456E1B9-26E2-8F83-E744-F34F01E9D701","companyIdentifier":0,"bluetoothNameSubstring":"SR","ssidPrefix":""},{"displayName":"SR5 Gallagher","imageName":"hr5","bluetoothNameSubstring":"","ssidPrefix":"HR5"}]
+⚡️  To Native ->  BluetoothLe addListener 55068960
+⚡️  [log] - startAccessorySearch [{"displayName":"SDL400S Shearwell","imageName":"shearwell-reader","uuidString":"2456E1B9-26E2-8F83-E744-F34F01E9D701","companyIdentifier":0,"bluetoothNameSubstring":"SR","ssidPrefix":""},{"displayName":"SR5 Gallagher","imageName":"hr5","bluetoothNameSubstring":"","ssidPrefix":"HR5"}]
+⚡️  To Native ->  BluetoothLe startAccessorySearch 55068961
+<CAPPluginCall: 0x300efc4b0>
+["items": [["uuidString": "2456E1B9-26E2-8F83-E744-F34F01E9D701", "ssidPrefix": "", "displayName": "SDL400S Shearwell", "imageName": "shearwell-reader", "bluetoothNameSubstring": "SR", "companyIdentifier": 0], ["imageName": "hr5", "ssidPrefix": "HR5", "displayName": "SR5 Gallagher", "bluetoothNameSubstring": ""]]]
+Items: [["uuidString": "2456E1B9-26E2-8F83-E744-F34F01E9D701", "ssidPrefix": "", "displayName": "SDL400S Shearwell", "imageName": "shearwell-reader", "bluetoothNameSubstring": "SR", "companyIdentifier": 0], ["imageName": "hr5", "ssidPrefix": "HR5", "displayName": "SR5 Gallagher", "bluetoothNameSubstring": ""]]
+uuidString used: 2456E1B9-26E2-8F83-E744-F34F01E9D701
+ssidPrefix used: HR5
+Search items: [ASPickerDisplayItem: ID 2A7612D0-1A30-4A7E-97CD-11CC7DFAC4D4, name 'SDL400S Shearwell', descriptor ASDiscoveryDescriptor: ServiceUUID 2456E1B9-26E2-8F83-E744-F34F01E9D701, ASPickerDisplayItem: ID 9C31C143-4299-4412-B6D9-CC2B5A1CD58F, name 'SR5 Gallagher', descriptor ASDiscoveryDescriptor: SSIDPrefix HR5]
+Number of items: 2, Number of search items: 2
+Starting accessory search
+Display items: [ASPickerDisplayItem: ID 2A7612D0-1A30-4A7E-97CD-11CC7DFAC4D4, name 'SDL400S Shearwell', descriptor ASDiscoveryDescriptor: ServiceUUID 2456E1B9-26E2-8F83-E744-F34F01E9D701, ASPickerDisplayItem: ID 9C31C143-4299-4412-B6D9-CC2B5A1CD58F, name 'SR5 Gallagher', descriptor ASDiscoveryDescriptor: SSIDPrefix HR5]
+⚡️  TO JS undefined
+picker did present
+picker did dismiss
+Accessory removed or changed: ASAccessoryEventType(rawValue: 31)
+ASAccessory: ID FECC47DB-60E4-4B3E-BD00-A637475186D3, name 'SR5 Gallagher', SSID HR5-1839178025, state Unauthorized, descriptor ASDiscoveryDescriptor: SSIDPrefix HR5
+⚡️  [log] - Accessory Display Objects [{"displayName":"SDL400S Shearwell","imageName":"shearwell-reader","uuidString":"2456E1B9-26E2-8F83-E744-F34F01E9D701","companyIdentifier":0,"bluetoothNameSubstring":"SR","ssidPrefix":""},{"displayName":"SR5 Gallagher","imageName":"hr5","bluetoothNameSubstring":"","ssidPrefix":"HR5"}]
+⚡️  To Native ->  BluetoothLe removeListener 55068962
+⚡️  To Native ->  BluetoothLe addListener 55068963
+⚡️  [log] - startAccessorySearch [{"displayName":"SDL400S Shearwell","imageName":"shearwell-reader","uuidString":"2456E1B9-26E2-8F83-E744-F34F01E9D701","companyIdentifier":0,"bluetoothNameSubstring":"SR","ssidPrefix":""},{"displayName":"SR5 Gallagher","imageName":"hr5","bluetoothNameSubstring":"","ssidPrefix":"HR5"}]
+⚡️  To Native ->  BluetoothLe startAccessorySearch 55068964
+<CAPPluginCall: 0x300efc0c0>
+["items": [["imageName": "shearwell-reader", "bluetoothNameSubstring": "SR", "displayName": "SDL400S Shearwell", "ssidPrefix": "", "companyIdentifier": 0, "uuidString": "2456E1B9-26E2-8F83-E744-F34F01E9D701"], ["displayName": "SR5 Gallagher", "bluetoothNameSubstring": "", "ssidPrefix": "HR5", "imageName": "hr5"]]]
+Items: [["imageName": "shearwell-reader", "bluetoothNameSubstring": "SR", "displayName": "SDL400S Shearwell", "ssidPrefix": "", "companyIdentifier": 0, "uuidString": "2456E1B9-26E2-8F83-E744-F34F01E9D701"], ["displayName": "SR5 Gallagher", "bluetoothNameSubstring": "", "ssidPrefix": "HR5", "imageName": "hr5"]]
+uuidString used: 2456E1B9-26E2-8F83-E744-F34F01E9D701
+ssidPrefix used: HR5
+Search items: [ASPickerDisplayItem: ID 45CCDC51-901E-47BC-B49D-6EB12EA2E992, name 'SDL400S Shearwell', descriptor ASDiscoveryDescriptor: ServiceUUID 2456E1B9-26E2-8F83-E744-F34F01E9D701, ASPickerDisplayItem: ID 13C855E7-C183-43B9-9576-DA439B20D85B, name 'SR5 Gallagher', descriptor ASDiscoveryDescriptor: SSIDPrefix HR5]
+Number of items: 2, Number of search items: 2
+Starting accessory search
+Display items: [ASPickerDisplayItem: ID 45CCDC51-901E-47BC-B49D-6EB12EA2E992, name 'SDL400S Shearwell', descriptor ASDiscoveryDescriptor: ServiceUUID 2456E1B9-26E2-8F83-E744-F34F01E9D701, ASPickerDisplayItem: ID 13C855E7-C183-43B9-9576-DA439B20D85B, name 'SR5 Gallagher', descriptor ASDiscoveryDescriptor: SSIDPrefix HR5]
+⚡️  TO JS undefined
+picker did present
+Accessory added: ASAccessoryEventType(rawValue: 30)
+ASAccessory: ID AC2B6928-A11B-423B-8003-D5E2CE17EBD0, name 'SR5 Gallagher', SSID HR5-1839178025, state Authorized, descriptor ASDiscoveryDescriptor: SSIDPrefix HR5
+nil
+nil
+ASAccessoryState
+attempting to join accessory hotspot
+joined accessory with result: ()
+completed i guess  nil
+Successfully joined accessory hotspot
+joined accessory hotspot
+UDP listener is ready on port 15000
+Connection is preparing
+Connection is waiting with error: POSIXErrorCode(rawValue: 50): Network is down
+Accessory removed or changed: ASAccessoryEventType(rawValue: 32)
+ASAccessory: ID AC2B6928-A11B-423B-8003-D5E2CE17EBD0, name 'SR5 Gallagher', SSID HR5-1839178025, state Authorized, descriptor ASDiscoveryDescriptor: SSIDPrefix HR5
+nw_path_necp_check_for_updates Failed to copy updated result (22)
+Connection is waiting with error: POSIXErrorCode(rawValue: 50): Network is down
+nw_channel_reclassify_input reclassify can't find client for slot 40C2E81D-D31C-4E8F-B2C7-69297EE5B36C, pending
+Received packet of size: 14 bytes
+Received message: HR5-1839178025
+recieved EID Hopefully
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C4 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C4 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C4 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C4] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C5 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C5 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C5 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C5] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C6 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C6 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C6 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C6] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C7 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C7 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C7 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C7] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C8 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C8 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C8 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C8] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C9 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C9 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C9 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C9] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C10 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C10 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C10 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C10] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C11 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C11 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C11 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C11] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C12 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C12 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C12 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C12] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C13 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C13 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C13 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C13] Failed to create connection from listener
+nw_ip_channel_inbox_handle_new_flow nw_connection_create_from_protocol_on_nw_queue failed
+nw_path_evaluator_create_flow_inner failed NECP_CLIENT_ACTION_ADD_FLOW (null) evaluator parameters: udp, definite, server, attribution: developer, reuse local address, context: Default Network Context (private), proc: 11871F33-3EA0-349F-8114-D2472F6D924C, local address: 0.0.0.0:15000
+nw_path_evaluator_create_flow_inner NECP_CLIENT_ACTION_ADD_FLOW 18D6075E-8003-4F18-8C7A-882C42D4D00F [17: File exists]
+nw_endpoint_flow_setup_channel [C14 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] failed to request add nexus flow
+nw_endpoint_flow_failed_with_error [C14 192.168.1.1:15000 initial channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] already failing, returning
+nw_endpoint_handler_create_from_protocol_listener [C14 192.168.1.1:15000 failed channel-flow (satisfied (Path is satisfied), viable, interface: en0[802.11], ipv4, dns, uses wifi)] nw_endpoint_flow_pre_attach_protocols
+nw_connection_create_from_protocol_on_nw_queue [C14] Failed to create connection from listener

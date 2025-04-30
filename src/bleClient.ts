@@ -4,6 +4,8 @@ import { Capacitor } from '@capacitor/core';
 import type { DisplayStrings } from './config';
 import { dataViewToHexString, hexStringToDataView } from './conversion';
 import type {
+  AccessoryDefinition,
+  AccessoryScanResult,
   BleDevice,
   BleService,
   ConnectionPriority,
@@ -105,6 +107,13 @@ export interface BleClientInterface {
    * @param options Device filters, see [RequestBleDeviceOptions](#RequestBleDeviceOptions)
    */
   requestDevice(options?: RequestBleDeviceOptions): Promise<BleDevice>;
+
+  /**
+   * Start searching for accessories based on provided items.
+   * Only available on **iOS**.
+   * @param items An array of objects containing displayName, uuidString, and imageName for each accessory.
+   */
+  startAccessorySearch(items:AccessoryDefinition[], callback: (result: any) => void): Promise<void>;
 
   /**
    * Start scanning for BLE devices to interact with according to the filters in the options. The callback will be invoked on each device that is found.
@@ -410,6 +419,18 @@ class BleClientClass implements BleClientInterface {
       return device;
     });
     return result;
+  }
+
+  async startAccessorySearch(items: AccessoryDefinition[], callback: (result: AccessoryScanResult) => void): Promise<void> {
+    await this.queue(async () => {
+      await this.scanListener?.remove();
+      this.scanListener = await BluetoothLe.addListener('onAccessorySetup', (resultInternal: any) => {
+       
+        callback(resultInternal);
+      });
+      console.log("startAccessorySearch", items)
+      await BluetoothLe.startAccessorySearch({items: items});
+    });
   }
 
   async requestLEScan(options: RequestBleDeviceOptions, callback: (result: ScanResult) => void): Promise<void> {

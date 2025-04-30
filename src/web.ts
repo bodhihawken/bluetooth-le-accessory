@@ -25,6 +25,7 @@ import type {
   WriteDescriptorOptions,
   GetMtuResult,
   RequestConnectionPriorityOptions,
+  AccessoryDefinition,
 } from './definitions';
 import { runWithTimeout } from './timeout';
 
@@ -203,6 +204,11 @@ export class BluetoothLeWeb extends WebPlugin implements BluetoothLePlugin {
     const deviceId = (event.target as BluetoothDevice).id;
     const key = `disconnected|${deviceId}`;
     this.notifyListeners(key, null);
+  }
+
+  async startAccessorySearch(options: {items: AccessoryDefinition[]}): Promise<void> {
+    console.log('startAccessorySearch', options);
+    throw this.unavailable('startAccessorySearch is not available on web.');
   }
 
   async createBond(_options: DeviceIdOptions): Promise<void> {

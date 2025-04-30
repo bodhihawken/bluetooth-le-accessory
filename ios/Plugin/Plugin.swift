@@ -3,10 +3,21 @@
 import Foundation
 import Capacitor
 import CoreBluetooth
+import AccessorySetupKit
 
 let CONNECTION_TIMEOUT: Double = 10
 let DEFAULT_TIMEOUT: Double = 5
 
+// Add this structure at the top of the file, outside of the BluetoothLe class
+struct AccessorySearchItem {
+    let displayName: String
+    let uuidString: String
+    let companyIdentifier: UInt16
+    let imageName: String
+    let ssidPrefix: String
+}
+
+@available(iOS 18.0, *)
 @objc(BluetoothLe)
 public class BluetoothLe: CAPPlugin {
     typealias BleDevice = [String: Any]
@@ -134,6 +145,78 @@ public class BluetoothLe: CAPPlugin {
 
             }
         )
+    }
+
+
+    //example input from js land is (options: {items: []})
+    @objc func startAccessorySearch(_ call: CAPPluginCall) {
+        guard let deviceManager = self.getDeviceManager(call) else { return }
+        print(call)
+        print(call.jsObjectRepresentation)
+        guard let items = call.getArray("items") else {
+            call.reject("options object doesn't exist must be provided")
+            return
+        }
+        print("Items: \(items)")
+        
+        var searchItems: [ASPickerDisplayItem] = []
+        for item in items {
+            let itemDict = item as? [String: Any]
+            let displayName = itemDict?["displayName"] as? String ?? ""
+            let uuidString = itemDict?["uuidString"] as? String ?? ""
+            let ssidPrefix = itemDict?["ssidPrefix"] as? String ?? ""
+            let companyIdentifierValue = itemDict?["companyIdentifier"] as? NSNumber
+            let companyIdentifier = companyIdentifierValue != nil && companyIdentifierValue?.intValue != 0 ? companyIdentifierValue : nil
+            let imageName = itemDict?["imageName"] as? String ?? ""
+        
+                                                 
+            var descriptor = ASDiscoveryDescriptor()
+            if (uuidString != "") {
+                print("uuidString used: \(uuidString)")
+                descriptor.bluetoothServiceUUID = CBUUID(string: uuidString)
+
+            }
+            if (companyIdentifier != nil) {
+                print("companyIdentifier used: \(companyIdentifier)")
+                descriptor.bluetoothCompanyIdentifier = ASBluetoothCompanyIdentifier(rawValue: companyIdentifier as! UInt16)
+            }
+            if (ssidPrefix != "") {
+                print("ssidPrefix used: \(ssidPrefix)")
+                descriptor.ssidPrefix = ssidPrefix
+            }
+            
+            let productImage = UIImage(systemName: "plus")!
+            
+            let displayItem = ASPickerDisplayItem(name: displayName,
+                                                  productImage: productImage,
+                                                  descriptor: descriptor)
+
+            searchItems.append(displayItem)
+        }
+        print("Search items: \(searchItems)")
+        print("Number of items: \(items.count), Number of search items: \(searchItems.count)")
+        
+        if searchItems.count != items.count {
+            print("Some items failed to convert. Original items:")
+            items.enumerated().forEach { (index, item) in
+                print("Item \(index): \(item)")
+            }
+        }
+        
+        deviceManager.startAccessorySearch(items: searchItems, {(device, service_id,  companyIdentifier,  rssi) -> Void in
+            self.deviceMap[device.getId()] = device
+            print("got device found callback")
+            let data = [
+                "device": self.getBleDevice(device),
+                "rssi": rssi,
+                "service_id": service_id,
+                "companyIdentifier": companyIdentifier
+            ]
+            print(device)
+            self.notifyListeners("onScanResult", data: data)
+        })
+         
+        call.resolve()
     }
 
     @objc func requestLEScan(_ call: CAPPluginCall) {

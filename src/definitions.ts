@@ -14,6 +14,14 @@ export interface InitializeOptions {
   androidNeverForLocation?: boolean;
 }
 
+export interface AccessoryDefinition {
+  displayName: string;
+  uuidString: string;
+  imageName: string;
+  companyIdentifier: number;
+  bluetoothNameSubstring: string;
+}
+
 export interface RequestBleDeviceOptions {
   /**
    * Filter devices by service UUIDs.
@@ -234,6 +242,26 @@ export interface ScanResultInternal<T = Data> {
   rawAdvertisement?: T;
 }
 
+
+
+export interface AccessoryScanResult {
+  /**
+   * The peripheral device that was found in the scan.
+   * **Android** and **web**: `device.name` is always identical to `localName`.
+   * **iOS**: `device.name` is identical to `localName` the first time a device is discovered, but after connecting `device.name` is the cached GAP name in subsequent scans.
+   */
+  device: BleDevice;
+  /**
+   * 
+   */
+  rssi?: number;
+
+  service_id?: string;
+
+  companyIdentifier: number
+}
+
+
 export interface ScanResult {
   /**
    * The peripheral device that was found in the scan.
@@ -288,6 +316,7 @@ export interface BluetoothLePlugin {
   requestLEScan(options?: RequestBleDeviceOptions): Promise<void>;
   stopLEScan(): Promise<void>;
   getDevices(options: GetDevicesOptions): Promise<GetDevicesResult>;
+  startAccessorySearch(options: {items: AccessoryDefinition[]}): Promise<void>;
   getConnectedDevices(options: GetConnectedDevicesOptions): Promise<GetDevicesResult>;
   addListener(
     eventName: 'onEnabledChanged',

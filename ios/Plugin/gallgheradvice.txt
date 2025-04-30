@@ -1,0 +1,45 @@
+Animal Management Systems
+HR4/5 Handheld Reader
+3rd Party Device Interaction over Wi-Fi
+1
+Prepared By: Ankush Sabharwal
+Date: August 2019
+Version: 1.0
+Project Phase: Maintenance
+2
+Contents
+Overview ................................................................................................................................................. 4
+Detecting HR4/5 over Wi-Fi .................................................................................................................... 4
+Data Output Mode over Wi-Fi ................................................................................................................ 4
+3
+Overview
+HR4/5 allow 3rd party devices to receive EID by connecting via the Wifi interface.
+There is a Data Output mode under which HR4/5 can send EID to 3rd party devices.
+Detecting HR4/5 over Wi-Fi
+When HR4/5 is connected over Wi-Fi, it starts sending following UDP broadcasts periodically on
+255.255.255.255 over port 15000:
+"HRx-SNo"
+where, x = 4 for HR4 or, 5 for HR5
+SNo = Serial Number for the product
+Data Output Mode over Wi-Fi
+HRx supports connection over Wi-Fi with other devices to send EIDs.
+HRx can connect with devices over Wi-Fi in following modes:
+• HRx as client (station mode) - In this mode, HRx will try to search and connect to an access
+point. Access point can be a Wi-Fi router or the data device itself.
+• HRx as access point (hotspot) - In this mode, HRx will be acting as a hotspot which other
+equipment can search and connect to.
+HRx supports maximum of one device connected over Wi-Fi at any time. Any other client trying to
+connect via Wi-Fi will be dropped until first client gets disconnected.
+When HRx Wi-Fi is connected, it can be detected as mentioned here. Once device identifies HRx over
+Wi-Fi network, it can connect with HRx over a TCP connection.
+HRx is listening on port 15001 for any incoming TCP connection request.
+Once a TCP client is connected, HRx will start sending ping packet "P" periodically every 2 seconds.
+The client should send the response packet "p" back to HRx in order to keep the connection alive.
+Failure to respond back to consecutive 5 pings will result in client connection to be dropped by HRx.
+Once the device has responded to the first Ping message, it can send a TCP message “!” over port
+15001 to HRx, to enable the Data Output mode on HRx. Thereafter, any EID scanned on the HRx will
+automatically be sent over TCP port 15001 to the device, till the device is connected to HRx and
+responding to the Ping requests correctly.
+HRx will disconnect from the device once TCP connection is terminated.
+4
+5
